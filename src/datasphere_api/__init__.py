@@ -8,6 +8,8 @@ from datasphere_api.exceptions import (
     DatasphereException,
     InvalidConfiguration,
     MissingCredentials,
+    TaskChainCancelled,
+    TaskChainTimeout,
     UnexpectedResponse,
 )
 
@@ -22,6 +24,8 @@ __all__ = [
     "DatasphereException",
     "InvalidConfiguration",
     "MissingCredentials",
+    "TaskChainCancelled",
+    "TaskChainTimeout",
     "TokenDict",
     "UnexpectedResponse",
 ]
