@@ -54,8 +54,7 @@ class TaskChainCancelled(asyncio.CancelledError):
         self.log_id = log_id
         super().__init__(
             f"Local polling for task chain '{chain}' in '{space}' was "
-            f"cancelled. The remote operation may still be running "
-            f"(log ID: {log_id})."
+            f"cancelled. The remote operation may continue (log ID: {log_id})."
         )
 
 
@@ -77,7 +76,7 @@ class ViewPersistenceTimeout(DatasphereException):
         self.log_id = log_id
         super().__init__(
             f"View {operation} operation for '{view}' in '{space}' exceeded "
-            f"its timeout. The remote operation may still be running "
+            f"its timeout. The remote operation may continue "
             f"(log ID: {log_id})."
         )
 
@@ -122,7 +121,7 @@ class ViewAnalysisTimeout(DatasphereException):
         log_details = f"log ID: {log_id}" if log_id is not None else ""
         super().__init__(
             f"View analysis for '{view}' in '{space}' exceeded its timeout. "
-            f"The remote operation may still be running ({log_details})."
+            f"The remote operation may continue ({log_details})."
         )
 
 
@@ -143,6 +142,5 @@ class ViewAnalysisCancelled(asyncio.CancelledError):
         log_details = f"log ID: {log_id}" if log_id is not None else ""
         super().__init__(
             f"Local polling for view analysis '{view}' in '{space}' was "
-            f"cancelled. The remote operation may still be running "
-            f"({log_details})."
+            f"cancelled. The remote operation may continue ({log_details})."
         )
