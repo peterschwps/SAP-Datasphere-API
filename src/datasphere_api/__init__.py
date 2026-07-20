@@ -11,6 +11,10 @@ from datasphere_api.exceptions import (
     TaskChainCancelled,
     TaskChainTimeout,
     UnexpectedResponse,
+    ViewAnalysisCancelled,
+    ViewAnalysisTimeout,
+    ViewPersistenceCancelled,
+    ViewPersistenceTimeout,
 )
 
 # Library logger stays silent unless the consumer adds handlers
@@ -28,4 +32,8 @@ __all__ = [
     "TaskChainTimeout",
     "TokenDict",
     "UnexpectedResponse",
+    "ViewAnalysisCancelled",
+    "ViewAnalysisTimeout",
+    "ViewPersistenceCancelled",
+    "ViewPersistenceTimeout",
 ]
