@@ -74,7 +74,9 @@ async def test_run_timeout_retains_log_id(client: DatasphereClient) -> None:
     assert error.value.log_id == 5
 
 
-@pytest.mark.parametrize("timeout", [0, -1, float("nan"), float("inf")])
+@pytest.mark.parametrize(
+    "timeout", [True, False, 0, -1, float("nan"), float("inf")]
+)
 @respx.mock
 async def test_run_rejects_invalid_timeout_before_start(
     client: DatasphereClient,
