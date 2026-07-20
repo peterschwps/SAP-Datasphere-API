@@ -99,8 +99,8 @@ class ViewPersistenceCancelled(asyncio.CancelledError):
         self.log_id = log_id
         super().__init__(
             f"Local polling for view {operation} operation '{view}' in "
-            f"'{space}' was cancelled. The remote operation may still be "
-            f"running (log ID: {log_id})."
+            f"'{space}' was cancelled. The remote operation may continue "
+            f"(log ID: {log_id})."
         )
 
 
