@@ -1,16 +1,14 @@
 import asyncio
 import logging
-import math
 from uuid import uuid4
 
 from datasphere_api.exceptions import TaskChainCancelled, TaskChainTimeout
-from datasphere_api.resources.base import BaseResource
+from datasphere_api.resources.base import BaseResource, validate_timeout
 
 logger = logging.getLogger(__name__)
 
 
 class TaskChains(BaseResource):
-
     async def start(self, chain: str, space: str) -> int | None:
         """
         Starts a task chain. Does not wait for the result.
@@ -22,12 +20,6 @@ class TaskChains(BaseResource):
         Returns:
             int | None: Log ID of the started run or None if the start failed.
         """
-        self.session.headers.update(
-            {
-                "Accept": "*/*",
-                "x-request-id": str(uuid4()).replace("-", "")
-            }
-        )
         response = await self.session.post(
             url=(
                 f"{self._base_url}/dwaas-core/tf/"
@@ -39,6 +31,10 @@ class TaskChains(BaseResource):
                 "activity": "RUN_CHAIN",
                 "applicationId": "TASK_CHAINS",
                 "spaceId": space,
+            },
+            headers={
+                "Accept": "*/*",
+                "x-request-id": str(uuid4()).replace("-", ""),
             },
         )
         if response.status_code != 202:
@@ -61,12 +57,13 @@ class TaskChains(BaseResource):
         Returns:
             dict: Log details with 'status' and 'runTime'.
         """
-        self.session.headers.update(
-            {"x-request-id": str(uuid4()).replace("-", "")}
-        )
         response = await self.session.get(
             url=f"{self._base_url}/dwaas-core/tf/{space}/logs",
             params={"taskLogId": log_id},
+            headers={
+                "Accept": "*/*",
+                "x-request-id": str(uuid4()).replace("-", ""),
+            },
         )
         return response.json()[0]
 
@@ -90,15 +87,14 @@ class TaskChains(BaseResource):
 
         Raises:
             TaskChainTimeout: If a started run exceeds the timeout.
+            ValueError: If timeout_seconds is not positive and finite, or is
+                        a boolean.
 
         Returns:
             tuple[bool, dict]: True if the run completed successfully,
                                otherwise False. Dict with log details.
         """
-        if timeout_seconds is not None and (
-            not math.isfinite(timeout_seconds) or timeout_seconds <= 0
-        ):
-            raise ValueError("Timeout must be a positive number.")
+        validate_timeout(timeout_seconds)
 
         # Start task chain
         logger.debug(
