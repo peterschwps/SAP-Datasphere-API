@@ -484,7 +484,7 @@ async def test_analyze_view_uses_start_id_without_latest_log_race(
     respx.post(path="/dwaas-core/advisor/SP/execute/VIEW1").mock(
         return_value=httpx.Response(
             202,
-            json={"status": "Running", "operationId": 20},
+            json={"status": "Running", "logId": 20},
         )
     )
     logs_route = respx.get(path="/dwaas-core/tf/SP/logs").mock(
