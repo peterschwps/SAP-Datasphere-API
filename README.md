@@ -63,7 +63,7 @@ Extend the sections for a list of all supported features.
   </ul>
 </details>
 
-> [!INFO]
+> [!NOTE]
 > Open an issue if you need another functionality.
 
 ## Installation
