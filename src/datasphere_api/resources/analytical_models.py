@@ -150,7 +150,5 @@ class AnalyticalModels(BaseResource):
 
         # Reverse list for bottom-up order
         all_ids.reverse()
-        analytical_model_to_view_mapping = {
-            analytical_model_id: {val[0]: val[1] for val in all_ids}
-        }
+        analytical_model_to_view_mapping = {analytical_model_id: dict(all_ids)}
         return analytical_model_to_view_mapping
