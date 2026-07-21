@@ -11,7 +11,11 @@ and can be used to build your own automations.
 
 ## Features
 
-<details open>
+### Datasphere Features
+
+Extend the sections for a list of all supported features.
+
+<details>
   <summary><b>Analytical Models</b></summary>
   <ul>
     <li>get all analytical models</li>
@@ -20,7 +24,7 @@ and can be used to build your own automations.
   </ul>
 </details>
 
-<details open>
+<details>
   <summary><b>Remote Tables</b></summary>
   <ul>
     <li>get all remote tables</li>
@@ -30,7 +34,7 @@ and can be used to build your own automations.
   </ul>
 </details>
 
-<details open>
+<details>
   <summary><b>Task Chains</b></summary>
   <ul>
     <li>start a task chain without awaiting its result</li>
@@ -39,7 +43,7 @@ and can be used to build your own automations.
   </ul>
 </details>
 
-<details open>
+<details>
   <summary><b>Views</b></summary>
   <ul>
     <li>get all views</li>
@@ -61,18 +65,6 @@ and can be used to build your own automations.
 
 > [!TIP]
 > Open an issue if you need another functionality.
-
----
-
-<details open>
-  <summary><b>Authentication and Workflows</b></summary>
-  <ul>
-    <li>refresh existing OAuth tokens</li>
-    <li>disable interactive login for non-interactive clients</li>
-    <li>configure timeouts for long-running workflows</li>
-    <li>report workflow timeouts and cancellations with operation IDs</li>
-  </ul>
-</details>
 
 ## Installation
 
