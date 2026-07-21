@@ -35,7 +35,7 @@ and can be used to build your own automations.
   <ul>
     <li>start a task chain without awaiting its result</li>
     <li>run a task chain and await its execution result</li>
-    <li>retrieve logs of running task chain</li>
+    <li>retrieve task-chain run logs by log ID</li>
   </ul>
 </details>
 
@@ -49,16 +49,34 @@ and can be used to build your own automations.
     <li>lock partitions</li>
     <li>unlock partitions</li>
     <li>delete partitions</li>
+    <li>check whether a view is persisted</li>
     <li>create persistence (with/without awaiting the result)</li>
     <li>remove persistence (with/without awaiting the result)</li>
     <li>get all logs of a view</li>
-    <li>get logs of a persistence run</li>
+    <li>get extended task logs</li>
     <li>analyze view using the view analyzer</li>
+    <li>retrieve view analyzer results</li>
   </ul>
 </details>
 
 > [!TIP]
 > Open an issue if you need another functionality.
+
+</br>
+
+---
+
+</br>
+
+<details open>
+  <summary><b>Authentication and Workflows</b></summary>
+  <ul>
+    <li>refresh existing OAuth tokens</li>
+    <li>disable interactive login for non-interactive clients</li>
+    <li>configure timeouts for long-running workflows</li>
+    <li>report workflow timeouts and cancellations with operation IDs</li>
+  </ul>
+</details>
 
 ## Installation
 
@@ -105,7 +123,12 @@ client has to be of type "Interactive Usage" with the redirect URI
 
 ## Authentication
 
-This client provides an interactive login. If no tokens are provided, it opens a browser window for the user to sign in. If tokens are provided, the client tries to refresh them first. After a valid session has been created it returns the tokens (from `client.login(tokens)`).
+This client supports interactive and non-interactive authentication. If tokens
+with a refresh token are provided, it tries to refresh them first. If no valid
+tokens are available, it opens a browser window by default. Non-interactive
+applications (e.g. MCP servers) can disable this fallback with
+`client.login(tokens, allow_interactive_fallback=False)`. After a valid session
+has been created, the client returns the tokens.
 
 Make sure to store those tokens if you want to persist the session across multiple runs (see [SAP-Datasphere-CLI](https://github.com/peterschwps/SAP-Datasphere-CLI) for an example). The client itself does not persist any tokens!
 
