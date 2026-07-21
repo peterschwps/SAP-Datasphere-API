@@ -62,11 +62,7 @@ and can be used to build your own automations.
 > [!TIP]
 > Open an issue if you need another functionality.
 
-</br>
-
 ---
-
-</br>
 
 <details open>
   <summary><b>Authentication and Workflows</b></summary>
