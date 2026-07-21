@@ -278,6 +278,85 @@ class Views(BaseResource):
         )
         return response.json()["logDetails"]
 
+    async def get_view_analyzer_result(
+        self,
+        log_id: int,
+        space: str,
+    ) -> dict:
+        """
+        Returns the result of a completed view analyzer run.
+
+        Args:
+            log_id (int): LogId of the analyzer run.
+            space (str): Space of the analyzed view.
+
+        Returns:
+            dict: Analyzer result (e.g. 'entityStats').
+        """
+        response = await self.session.get(
+            url=(
+                f"{self._base_url}/dwaas-core/advisor/{space}/result/{log_id}"
+            ),
+            headers={
+                "Accept": "*/*",
+                "X-Requested-With": "XMLHttpRequest",
+                "x-request-id": str(uuid4()).replace("-", ""),
+            },
+        )
+        return response.json()
+
+    async def get_task_logs(
+        self,
+        view: str,
+        space: str,
+    ) -> list[dict]:
+        """
+        Returns the task logs of a view.
+
+        Args:
+            view (str): View to fetch logs for.
+            space (str): Space of the object.
+
+        Returns:
+            list[dict]: Log entries with 'status' and 'logId'.
+        """
+        response = await self.session.get(
+            url=f"{self._base_url}/dwaas-core/tf/{space}/logs",
+            params={"objectId": view, "getLocks": True},
+            headers={
+                "Accept": "*/*",
+                "X-Requested-With": "XMLHttpRequest",
+                "x-request-id": str(uuid4()).replace("-", ""),
+            },
+        )
+        return response.json()["logs"]
+
+    async def is_persisted(self, view: str, space: str) -> bool:
+        """
+        Checks if a view is currently persisted. Retries up to three times if
+        the monitor endpoint doesn't answer.
+
+        Args:
+            view (str): Name of the view.
+            space (str): Space of the view.
+
+        Raises:
+            UnexpectedResponse: If the persistence state cannot be checked
+                                after three attempts.
+
+        Returns:
+            bool: True if the view is persisted, else False.
+        """
+        for _ in range(3):
+            monitor_details = await self.get_monitor_details(view, space)
+            if not monitor_details:
+                await asyncio.sleep(1)
+                continue
+            return monitor_details.get("dataPersistency", "") == "Persisted"
+        raise UnexpectedResponse(
+            f"Failed to check persistence of view '{view}' in '{space}'."
+        )
+
     async def start_persistence(self, view: str, space: str) -> int | None:
         """
         Starts the persistence of a view.
@@ -429,33 +508,6 @@ class Views(BaseResource):
         if not isinstance(log_id, int):
             log_id = None
         return True, log_id, already_running
-
-    async def get_view_analyzer_result(
-        self,
-        log_id: int,
-        space: str,
-    ) -> dict:
-        """
-        Returns the result of a completed view analyzer run.
-
-        Args:
-            log_id (int): LogId of the analyzer run.
-            space (str): Space of the analyzed view.
-
-        Returns:
-            dict: Analyzer result (e.g. 'entityStats').
-        """
-        response = await self.session.get(
-            url=(
-                f"{self._base_url}/dwaas-core/advisor/{space}/result/{log_id}"
-            ),
-            headers={
-                "Accept": "*/*",
-                "X-Requested-With": "XMLHttpRequest",
-                "x-request-id": str(uuid4()).replace("-", ""),
-            },
-        )
-        return response.json()
 
     async def persist_view(
         self,
@@ -674,58 +726,6 @@ class Views(BaseResource):
             space,
         )
         return True, log_details
-
-    async def is_persisted(self, view: str, space: str) -> bool:
-        """
-        Checks if a view is currently persisted. Retries up to three times if
-        the monitor endpoint doesn't answer.
-
-        Args:
-            view (str): Name of the view.
-            space (str): Space of the view.
-
-        Raises:
-            UnexpectedResponse: If the persistence state cannot be checked
-                                after three attempts.
-
-        Returns:
-            bool: True if the view is persisted, else False.
-        """
-        for _ in range(3):
-            monitor_details = await self.get_monitor_details(view, space)
-            if not monitor_details:
-                await asyncio.sleep(1)
-                continue
-            return monitor_details.get("dataPersistency", "") == "Persisted"
-        raise UnexpectedResponse(
-            f"Failed to check persistence of view '{view}' in '{space}'."
-        )
-
-    async def get_task_logs(
-        self,
-        view: str,
-        space: str,
-    ) -> list[dict]:
-        """
-        Returns the task logs of a view.
-
-        Args:
-            view (str): View to fetch logs for.
-            space (str): Space of the object.
-
-        Returns:
-            list[dict]: Log entries with 'status' and 'logId'.
-        """
-        response = await self.session.get(
-            url=f"{self._base_url}/dwaas-core/tf/{space}/logs",
-            params={"objectId": view, "getLocks": True},
-            headers={
-                "Accept": "*/*",
-                "X-Requested-With": "XMLHttpRequest",
-                "x-request-id": str(uuid4()).replace("-", ""),
-            },
-        )
-        return response.json()["logs"]
 
     async def analyze_view(
         self,
