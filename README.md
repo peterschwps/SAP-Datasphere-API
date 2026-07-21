@@ -1,4 +1,4 @@
-# Datasphere-API
+# SAP-Datasphere-API
 
 [![PyPI](https://img.shields.io/pypi/v/Datasphere-API?label=PyPI)](https://pypi.org/project/Datasphere-API/)
 [![Python](https://img.shields.io/pypi/pyversions/Datasphere-API?label=Python)](https://pypi.org/project/Datasphere-API/)
