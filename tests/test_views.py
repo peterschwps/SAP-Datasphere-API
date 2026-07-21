@@ -152,16 +152,14 @@ async def test_operation_headers_are_complete_and_fresh(
         assert request.headers["Accept"] == "*/*"
 
     task_log_request = next(
-        request
+        call.request
         for call in task_logs.calls
-        for request in [call.request]
-        if request.url.params.get("taskLogId")
+        if call.request.url.params.get("taskLogId")
     )
     analyzer_log_request = next(
-        request
+        call.request
         for call in task_logs.calls
-        for request in [call.request]
-        if not request.url.params.get("taskLogId")
+        if not call.request.url.params.get("taskLogId")
     )
     assert task_log_request.headers["Accept"] == "*/*"
     for request in [
